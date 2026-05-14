@@ -1,1 +1,26 @@
+[ALERT] Possible ARP Spoofing Detected!
+Time: 2026-05-14 22:43:57.661777
+IP Address: 10.1.1.1
+Original MAC: aa:bb:cc:dd:ee:ff
+New MAC: 12:34:56:78:9a:bc
 
+
+[ALERT] Possible ARP Spoofing Detected!
+Time: 2026-05-14 22:44:00.676793
+IP Address: 10.1.1.1
+Original MAC: aa:bb:cc:dd:ee:ff
+New MAC: 12:34:56:78:9a:bc
+
+
+[ALERT] Possible ARP Spoofing Detected!
+Time: 2026-05-14 22:44:03.691776
+IP Address: 10.1.1.1
+Original MAC: aa:bb:cc:dd:ee:ff
+New MAC: 12:34:56:78:9a:bc
+
+
+[ALERT] Possible ARP Spoofing Detected!
+Time: 2026-05-14 22:44:06.706774
+IP Address: 10.1.1.1
+Original MAC: aa:bb:cc:dd:ee:ff
+New MAC: 12:34:56:78:9a:bc
