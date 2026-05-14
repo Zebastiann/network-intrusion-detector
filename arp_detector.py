@@ -1,42 +1,55 @@
-from scapy.all import sniff, ARP
+from scapy.all import ARP, Ether, srp
 from colorama import Fore, Style, init
 from datetime import datetime
+import time
 
 init(autoreset=True)
 
-arp_table = {}
+TARGET_IP = "10.1.1.1"
+last_mac = None
 
-def log_alert(message):
-    with open("arp_alert_log.txt", "a") as file:
-        file.write(message + "\n")
+def get_mac(ip):
+    arp_request = ARP(pdst=ip)
+    broadcast = Ether(dst="ff:ff:ff:ff:ff:ff")
+    packet = broadcast / arp_request
 
-def process_packet(packet):
-    if packet.haslayer(ARP) and packet[ARP].op == 2:
-        ip = packet[ARP].psrc
-        mac = packet[ARP].hwsrc
+    answered = srp(packet, timeout=2, verbose=False)[0]
 
-        if ip in arp_table:
-            if arp_table[ip] != mac:
-                alert = f"""
-[ALERT] Possible ARP Spoofing Detected!
-Time: {datetime.now()}
-IP Address: {ip}
-Original MAC: {arp_table[ip]}
-New MAC: {mac}
-"""
-                print(Fore.RED + alert + Style.RESET_ALL)
-                log_alert(alert)
-            else:
-                print(Fore.GREEN + f"[SAFE] {ip} is still mapped to {mac}")
-        else:
-            arp_table[ip] = mac
-            print(Fore.CYAN + f"[NEW DEVICE] {ip} is mapped to {mac}")
+    if answered:
+        return answered[0][1].hwsrc
+    return None
 
 def main():
-    print(Fore.YELLOW + "Starting ARP Spoofing Detector...")
-    print(Fore.YELLOW + "Monitoring ARP traffic. Press CTRL+C to stop.\n")
+    global last_mac
 
-    sniff(store=False, prn=process_packet)
+    print(Fore.YELLOW + "Starting ARP Spoofing Detector...")
+    print(Fore.YELLOW + f"Monitoring gateway IP: {TARGET_IP}")
+    print(Fore.YELLOW + "Press CTRL+C to stop.\n")
+
+    while True:
+        current_mac = get_mac(TARGET_IP)
+
+        if current_mac is None:
+            print(Fore.RED + f"[WARNING] No ARP response from {TARGET_IP}")
+        elif last_mac is None:
+            last_mac = current_mac
+            print(Fore.CYAN + f"[BASELINE] {TARGET_IP} is mapped to {current_mac}")
+        elif current_mac != last_mac:
+            alert = f"""
+[ALERT] Possible ARP Spoofing Detected!
+Time: {datetime.now()}
+IP Address: {TARGET_IP}
+Original MAC: {last_mac}
+New MAC: {current_mac}
+"""
+            print(Fore.RED + alert + Style.RESET_ALL)
+
+            with open("arp_alert_log.txt", "a") as file:
+                file.write(alert + "\n")
+        else:
+            print(Fore.GREEN + f"[SAFE] {TARGET_IP} is still mapped to {current_mac}")
+
+        time.sleep(3)
 
 if __name__ == "__main__":
     main()
