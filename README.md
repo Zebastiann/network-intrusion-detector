@@ -51,6 +51,28 @@ I chose ARP spoofing detection because it demonstrates how devices communicate o
 
 ---
 
+# Network Topology
+
+The project was tested inside an Ubuntu Linux virtual machine connected to a local virtual network.
+
+The detector monitored communication between the VM and the network gateway/router by sending ARP requests and analyzing ARP replies.
+
+```text
++-------------------+
+| Ubuntu VM         |
+| ARP Detector Tool |
+| IP: 10.1.1.4      |
++-------------------+
+          |
+          | Local Network
+          |
++-------------------+
+| Gateway / Router  |
+| IP: 10.1.1.1      |
++-------------------+
+```
+---
+
 # Project Structure
 
 ```text
@@ -127,6 +149,12 @@ Some future improvements I would like to add include:
 * Email alerts
 
 ---
+
+# References:
+
+* Scapy Documentation: https://scapy.readthedocs.io/
+* Python Documentation: https://docs.python.org/3/
+* GeeksforGeeks ARP Protocol Overview: https://www.geeksforgeeks.org/arp-protocol-packet-format/
 
 # Author
 
