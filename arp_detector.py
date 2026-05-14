@@ -44,7 +44,7 @@ New MAC: {current_mac}
 """
             print(Fore.RED + alert + Style.RESET_ALL)
 
-            with open("arp_alert_log.txt", "a") as file:
+            with open("sample_logs/arp_alert_log.txt", "a") as file:
                 file.write(alert + "\n")
         else:
             print(Fore.GREEN + f"[SAFE] {TARGET_IP} is still mapped to {current_mac}")
